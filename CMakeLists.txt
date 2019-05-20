@@ -18,8 +18,6 @@ INCLUDE (${CMAKE_CURRENT_SOURCE_DIR}/cmake.Modules/CompileFlags.cmake)
 SET (CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 
 ###########################################################################
-# Set header files from Catkin.
-INCLUDE_DIRECTORIES (${PROJECT_SOURCE_DIRS})
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
   
@@ -27,7 +25,7 @@ INCLUDE_DIRECTORIES(include)
 # Build project.
 FILE(GLOB_RECURSE ${PROJECT_NAME}-srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 ADD_LIBRARY(${PROJECT_NAME} ${${PROJECT_NAME}-srcs})
-TARGET_LINK_LIBRARIES (${PROJECT_NAME} ${catkin_LIBRARIES}) 
+TARGET_LINK_LIBRARIES (${PROJECT_NAME}) 
 
 ###########################################################################
 ## Add gtest based cpp test target and link libraries
@@ -36,9 +34,9 @@ FIND_PACKAGE(GTest REQUIRED)
 INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
 
 FILE(GLOB_RECURSE files "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
-ADD_EXECUTABLE(utest ${files})
-TARGET_LINK_LIBRARIES(utest ${PROJECT_NAME} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
-ADD_TEST(utest utest)
+ADD_EXECUTABLE(run_test ${files})
+TARGET_LINK_LIBRARIES(run_test ${PROJECT_NAME} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+ADD_TEST(run_test run_test)
 
 ###########################################################################
 # Install library
