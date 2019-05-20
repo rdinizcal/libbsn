@@ -22,10 +22,14 @@ SET (CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
 INCLUDE_DIRECTORIES(include)
   
 ###########################################################################
+# Add and Set linking libraries to successfully link test suites and binaries.
+SET (LIBRARIES lepton)
+
+###########################################################################
 # Build project.
 FILE(GLOB_RECURSE ${PROJECT_NAME}-srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 ADD_LIBRARY(${PROJECT_NAME} ${${PROJECT_NAME}-srcs})
-TARGET_LINK_LIBRARIES (${PROJECT_NAME}) 
+TARGET_LINK_LIBRARIES (${PROJECT_NAME} ${LIBRARIES}) 
 
 ###########################################################################
 ## Add gtest based cpp test target and link libraries
@@ -35,7 +39,7 @@ INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRS})
 
 FILE(GLOB_RECURSE files "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
 ADD_EXECUTABLE(run_test ${files})
-TARGET_LINK_LIBRARIES(run_test ${PROJECT_NAME} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+TARGET_LINK_LIBRARIES(run_test ${PROJECT_NAME} ${LIBRARIES} ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
 ADD_TEST(run_test run_test)
 
 ###########################################################################
