@@ -23,7 +23,8 @@ INCLUDE_DIRECTORIES(include)
   
 ###########################################################################
 # Add and Set linking libraries to successfully link test suites and binaries.
-SET (LIBRARIES lepton)
+FIND_LIBRARY(LEPTON_LIBRARY lepton)
+SET (LIBRARIES ${LEPTON_LIBRARY})
 
 ###########################################################################
 # Build project.
