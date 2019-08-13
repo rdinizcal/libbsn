@@ -10,6 +10,10 @@
 
 #include "range/Range.hpp"
 
+/*  OBS.: Para simplificação
+    O vetor de transições contém as probabilidades de tal forma:
+        
+*/
 namespace bsn {
     namespace generator {
 
@@ -28,6 +32,11 @@ namespace bsn {
                 int32_t currentState;
                 // Contém os intervalos de cada estado
                 std::array<bsn::range::Range, 5> states;
+
+                // Calcula o próximo estado da cadeia de markov
+                void next_state();
+                // Calcula um valor baseado no intervalo do estado atual
+                double calculate_state();
 
                 const std::string toString() const;
         };
