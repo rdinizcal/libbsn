@@ -3,7 +3,6 @@
 
 #include <list>
 #include <string>
-#include <array>
 #include <stdint.h>
 #include <sstream>
 
@@ -19,19 +18,20 @@ namespace bsn {
                 MovingAverage(const MovingAverage & /*obj*/);
                 MovingAverage &operator=(const MovingAverage & /*obj*/);
 
-                double getValue(std::string);
-                void insert(double, std::string);
-
+                double getValue();
+                void insert(double);                
                 const std::string toString() const;
 
                 uint32_t getRange() const;
                 void setRange(const uint32_t);
+
+                std::list<double> getBuffer();
             
             private:
                 double computedAverage;
                 double lastInserted;
                 uint32_t range;
-                std::array<std::list<double>, 5> buffer;
+                std::list<double> buffer;
                 
         };        
 

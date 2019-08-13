@@ -21,46 +21,40 @@ namespace bsn {
             return (*this);
         }
 
-        int32_t defineType(std::string type) {
-            if(type == "thermometer")
-                return 0;
-            if(type == "ecg")
-                return 1;
-            if(type == "oximeter")
-                return 2;
-            if(type == "bpms") 
-                return 3;
-            if(type == "bpmd")
-                return 4;
-            return 0;
-        }
 
-        double MovingAverage::getValue(std::string type) {
-            int32_t index = defineType(type);
+        double MovingAverage::getValue() {
+     
             computedAverage = 0.0;
 
-            if(buffer[index].size() < range){
-                return buffer[index].back();
-            }
-            else {
-                if(buffer[index].size() == range) {
-                    for(double i : buffer[index]) {
-                        computedAverage += i;
+            // Se a lista ainda não foi preenchida
+            if(buffer.size() < range && buffer.size() > 0){
+                for(double i : buffer) {
+                    computedAverage += i;
                     }
-                    computedAverage /= range;
-                }
+                computedAverage /= buffer.size();
                 return computedAverage;
             }
+            // Quando a lista possui o limite máximo de valores
+            else if(buffer.size() == range) {
+                for(double i : buffer) {
+                    computedAverage += i;
+                    }
+                computedAverage /= range;
+                return computedAverage;
+            }
+			// Qualquer outro range de valores
+            return 0;
 
         }
 
-        void MovingAverage::insert(double value, std::string type) {
-            int32_t index = defineType(type);
-            lastInserted = value;   
-            buffer[index].push_back(lastInserted);
 
-            if(buffer[index].size() > range) {
-                buffer[index].pop_front();
+
+        void MovingAverage::insert(double value) {            
+            lastInserted = value;   
+            buffer.push_back(lastInserted);
+
+            if(buffer.size() > range) {
+                buffer.pop_front();
             }
 
         }
@@ -79,6 +73,11 @@ namespace bsn {
             sstr << "Computed average:" << computedAverage << "" << endl;
 
             return sstr.str();
+        }
+
+        std::list<double> MovingAverage::getBuffer(){
+
+            return buffer;
         }
 
     }
