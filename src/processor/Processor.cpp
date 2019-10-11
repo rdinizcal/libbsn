@@ -53,11 +53,13 @@ namespace bsn {
             if(!available_to_process(packetsReceived))
                 return -1;
             
+            std::vector<double> values;
+
             for(auto &packet_list : packetsReceived){
                 if(!packet_list.empty()) {
                     // Soma à média e retira da fila
                     average += packet_list.front();
-                    
+                    values.push_back(packet_list.front());
                     // Descarta o pacote processado se existem
                     // Mais outros para serem processados
                     if(packet_list.size() > 1) {
@@ -65,10 +67,50 @@ namespace bsn {
                     }			
                     count++;
                 }
-            }	
+            }
+
             // Calcula a media partir da soma dividida pelo número de pacotes lidos
-            risk_status = (average / count);
+            double avg = (average / count);
+
+            std::vector<double> deviations;
+            double min = 1000; //Maior valor possível é 100
+            double max = -1; //Menor valor possível é 0
+
+            size_t i;
+
+            for(i = 0;i < values.size();i++) {
+                //Cálculo dos desvios individuais
+                double dev;
+                dev = values.at(i) - avg;
+
+                deviations.push_back(dev);
+
+                if(dev > max) {
+                    max = dev;
+                } else if(dev < min) {
+                    min = dev;
+                }
+            }
+
+            double weighted_average = 0.0;
+            double weight_sum = 0.0;
+
             // Status de risco do paciente dado em porcentagem
+            if(max - min > 0) {
+                //Se o máximo e mínimo forem diferentes, normalizar desvios e calcular média ponderada
+                for(i = 0;i < deviations.size();i++) {
+                    //Normalizando desvios entre 0 e 1
+                    deviations.at(i) = (deviations.at(i) - min)/(max - min);
+
+                    weight_sum += deviations.at(i);
+                    weighted_average += values.at(i)*deviations.at(i);
+                }
+
+                risk_status = weighted_average/weight_sum;
+            } else {
+                //Se o máximo é igual ao mínimo, a média será calculada e dará o mesmo valor
+                risk_status = avg / count;
+            }
 
             // 85.0 é um número totalmente ARBITRARIO
             if(risk_status > 66.0){
