@@ -19,10 +19,10 @@ namespace bsn {
                 
                 double getValue();
                 void setSeed();
+                void nextState();
 
             private:
                 double calculateValue();
-                void nextState();
 
                 Markov markovChain;
                 double value;

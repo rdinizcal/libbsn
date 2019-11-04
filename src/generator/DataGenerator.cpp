@@ -60,7 +60,6 @@ namespace bsn {
         }
 
         double DataGenerator::getValue() {
-            nextState();
             return calculateValue();
         }
     }
